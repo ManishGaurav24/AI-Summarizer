@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Drive AI Summarizer</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(-45deg, #667eea, #764ba2, #6b8dd6, #8e37d7);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            color: white;
+        }
+
+        @keyframes gradientBG {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* ===== NAVBAR ===== */
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 40px;
+            backdrop-filter: blur(12px);
+            background: rgba(255, 255, 255, 0.1);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .logo {
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logout-btn {
+            padding: 8px 16px;
+            border-radius: 8px;
+            background: rgba(255, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            text-decoration: none;
+            color: white;
+            transition: 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 0, 0, 0.6);
+        }
+
+        /* ===== HERO ===== */
+
+        .hero {
+            text-align: center;
+            padding: 70px 20px;
+        }
+
+        .hero h1 {
+            font-size: 42px;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 18px;
+            max-width: 700px;
+            margin: auto;
+            opacity: 0.9;
+        }
+
+        /* ===== GLASS CARD ===== */
+
+        .glass-card {
+            backdrop-filter: blur(15px);
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            padding: 25px;
+            margin: 20px auto;
+            width: 80%;
+            transition: 0.3s;
+        }
+
+        .glass-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+
+        /* ===== BUTTON ===== */
+
+        .btn {
+            padding: 12px 28px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.3);
+            text-decoration: none;
+            color: white;
+            display: inline-block;
+            margin-top: 25px;
+            transition: 0.3s;
+        }
+
+        .btn:hover {
+            background: rgba(255, 255, 255, 0.4);
+        }
+
+        /* ===== FILE LIST ===== */
+
+        .file-item {
+            padding: 15px;
+            margin-bottom: 10px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.08);
+        }
+
+        /* ===== LOADER ===== */
+
+        .loader {
+            display: none;
+            margin-top: 30px;
+        }
+
+        .spinner {
+            border: 6px solid rgba(255,255,255,0.2);
+            border-top: 6px solid white;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: auto;
+        }
+
+        .summary-card {
+            position: relative;
+        }
+
+        .summary-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .copy-btn {
+            background: rgba(255,255,255,0.15);
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 8px;
+            padding: 6px 10px;
+            cursor: pointer;
+            color: white;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+
+        .copy-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        img.preview {
+            width: 350px;
+            border-radius: 15px;
+            margin-top: 30px;
+        }
+
+    </style>
+
+    <script>
+        function showLoader() {
+            document.getElementById("loader").style.display = "block";
+        }
+        function copySummary(button, text) {
+
+            navigator.clipboard.writeText(text).then(function() {
+
+                // Change icon to check
+                button.innerHTML = "✓";
+
+                // Revert back after 5 seconds
+                setTimeout(function() {
+                    button.innerHTML = "📋";
+                }, 2000);
+
+            }).catch(function(err) {
+                console.error("Failed to copy: ", err);
+            });
+        }
+    </script>
+</head>
+
+<body>
+
+<!-- ===== NAVBAR ===== -->
+
+<div class="navbar">
+    <div class="logo">🚀 Drive AI Summarizer</div>
+
+    <div class="nav-right">
+        {% if user %}
+            <div>👤 {{ user }}</div>
+            <a href="/logout" class="logout-btn">Logout</a>
+        {% endif %}
+    </div>
+</div>
+
+<!-- ===== HERO SECTION ===== -->
+
+<div class="hero">
+    <h1>Summarize Your Google Drive Documents with AI</h1>
+    <p>
+        Instantly analyze and summarize multiple documents from your Drive
+        using powerful AI models — fast, parallel, and beautifully presented.
+    </p>
+
+    <img src="/static/placeholder.png" class="preview" alt="App Preview">
+
+    {% if not files %}
+        <br>
+        <a href="/login" class="btn">Login with Google</a>
+    {% endif %}
+</div>
+
+<!-- ===== FILES SECTION ===== -->
+
+{% if files %}
+
+    <div class="glass-card">
+        <h2>📂 Files in Drive</h2>
+
+        {% for file in files %}
+            <div class="file-item">
+                {{ file.name }}
+                {% if summaries %}
+                    — ✅ Summary Ready
+                {% else %}
+                    — ⏳ Waiting
+                {% endif %}
+            </div>
+        {% endfor %}
+
+        {% if not summaries %}
+            <a href="/summarize" class="btn" onclick="showLoader()">Generate Summaries</a>
+
+            <div id="loader" class="loader">
+                <div class="spinner"></div>
+                <p>Generating summaries... Please wait.</p>
+            </div>
+        {% endif %}
+    </div>
+
+{% endif %}
+
+<!-- ===== SUMMARIES ===== -->
+
+{% if summaries %}
+
+    <div class="glass-card">
+        <h2>📄 Generated Summaries</h2>
+
+        {% for item in summaries %}
+            <div class="file-item summary-card">
+                <div class="summary-header">
+                    <strong>{{ item.file }}</strong>
+                    <button class="copy-btn"
+                        onclick="copySummary(this, `{{ item.summary | join('\n')}}`)">
+                        📋
+                    </button>
+                </div>
+                <ul>
+                    {% for point in item.summary %}
+                        <li>{{ point }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endfor %}
+
+        <a href="/download" class="btn">Download CSV</a>
+    </div>
+
+{% endif %}
+
+</body>
+</html>
