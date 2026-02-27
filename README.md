@@ -14,7 +14,7 @@ A FastAPI-based web application that connects to Google Drive, extracts text fro
 
 ## Live Demo
 
-🔗 **[Live Application Link](#)** *(Coming Soon - Add live deployment URL here)*
+🔗 **[Live Application Link](#)** *(Coming Soon)*
 
 ## Architecture Diagram
 
