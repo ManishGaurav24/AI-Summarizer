@@ -14,7 +14,7 @@ A FastAPI-based web application that connects to Google Drive, extracts text fro
 
 ## Live Demo
 
-🔗 **[Live Application Link](#)** *(Coming Soon)*
+🔗 **[Live Application Link](https://ai-summarizer-sp5l.onrender.com/)**
 
 ## Architecture Diagram
 
