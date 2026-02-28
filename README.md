@@ -18,7 +18,7 @@ A FastAPI-based web application that connects to Google Drive, extracts text fro
 
 ## Architecture Diagram
 
-![Architecture Diagram](static/Architectue.gif)
+![Architecture Diagram](static/Architecture.gif)
 
 ## Screenshots
 
