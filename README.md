@@ -18,56 +18,46 @@ A FastAPI-based web application that connects to Google Drive, extracts text fro
 
 ## Architecture Diagram
 
-### Application Flow
+![Architecture Diagram](static/Architectue.gif)
 
+## Screenshots
+
+### Home Page
+![Home Page](static/Home.png)
+
+### Summarize Page
+![Summarize Page](static/Summarize.png)
+
+## Generated CSV Files
+
+After you click **"Summarize"**, the application processes all files and generates a CSV report with timestamps.
+
+### CSV File Location
 ```
-┌─────────────────────────────────────────────────────────────────┐
-│                         USER INTERFACE                           │
-│                      (Web Browser / Frontend)                    │
-│                        (Jinja2 - HTML)                           │
-└────────────────────────────┬────────────────────────────────────┘
-                             │
-                             ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                       FastAPI Server                             │
-│                    (app/main.py - Routes)                       │
-│                                                                  │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐           │
-│  │   /login     │  │  /process    │  │ /summarize   │           │
-│  │  (OAuth2)    │  │  (List Files)│  │ (Main Logic) │           │
-│  └──────┬───────┘  └──────┬───────┘  └──────┬───────┘           │
-│         │                 │                  │                   │
-└─────────┼─────────────────┼──────────────────┼───────────────────┘
-          │                 │                  │
-          ▼                 ▼                  ▼
-┌──────────────────────────────────────────────────────────────────┐
-│                   SERVICE LAYER                                  │
-│                                                                  │
-│  ┌──────────────────┐  ┌──────────────────┐                      │
-│  │ Drive Service    │  │ Parser Service   │                      │
-│  │ (OAuth2 Auth)    │  │ (Text Extraction)│                      │
-│  │ (List Files)     │  │ - PDF → Text     │                      │
-│  │ (Download Files) │  │ - DOCX → Text    │                      │
-│  └────────┬─────────┘  │ - TXT → Text     │                      │
-│           │            └────────┬─────────┘                      │
-│           │                     │                                │
-└───┬───────┼─────────────────────┼────────────────────────────────┘
-    │       │                     │
-    ▼       ▼                     ▼
-┌──────────────────────────────────────────────────────────────────┐
-│              EXTERNAL APIs & SERVICES                            │
-│                                                                  │
-│  ┌─────────────────────┐      ┌──────────────────┐              │
-│  │  Google Drive API   │      │ Google Gemini    │              │
-│  │  (File Management)  │      │ API              │              │
-│  │                     │      │ (Summarization)  │              │
-│  └─────────────────────┘      └──────────────────┘              │
-│           ▲                           ▲                          │
-└───────────┼───────────────────────────┼──────────────────────────┘
-            │                           │
-            │  OAuth2 Token             │  API Key
-            │                           │
-    Google Cloud Services Network
+output/
+├── Summary_FolderName_20260228_143628.csv
+├── Summary_FolderName_20260228_150245.csv
+└── ... (more CSV files with different timestamps)
+```
+
+### Accessing Your CSV Files
+
+**Option 1: Download from Web Interface**
+1. Click the "Summarize" button
+2. Once processing completes, click the "Download" button
+3. CSV file will download with format: `Summary_FolderName_YYYYMMDD_HHMMSS.csv`
+
+**Option 2: Open from File System**
+1. Navigate to the `output/` folder in your project directory
+2. Find your CSV file by timestamp
+3. Open with Excel, Google Sheets, or any text editor
+
+### CSV File Format
+```
+file,summary
+Auto_Insurance.docx,"This document provides an overview of auto insurance..."
+Semantic_Kernel_Components.pdf,"The PDF explains the key components..."
+consolidated_output.txt,"This text file contains consolidated information..."
 ```
 
 ### Data Flow Sequence
@@ -130,58 +120,58 @@ A FastAPI-based web application that connects to Google Drive, extracts text fro
 ┌────────────────────────────────────────────────────────────┐
 │                     STORAGE LAYER                          │
 │                                                            │
-│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐    │
-│  │   temp/      │  │   output/    │  │   .env       │    │
-│  │ (Downloaded  │  │ (CSV Reports)│  │ (Config)     │    │
-│  │  files)      │  │ (Timestamps) │  │              │    │
-│  └──────────────┘  └──────────────┘  └──────────────┘    │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
+│  │   temp/      │  │   output/    │  │   .env       │      │
+│  │ (Downloaded  │  │ (CSV Reports)│  │ (Config)     │      │
+│  │  files)      │  │ (Timestamps) │  │              │      │
+│  └──────────────┘  └──────────────┘  └──────────────┘      │
 └────────────────────────────────────────────────────────────┘
                           ▲
                           │
 ┌────────────────────────────────────────────────────────────┐
 │              PROCESSING & TRANSFORMATION                   │
 │                                                            │
-│  Concurrent Processing (ThreadPoolExecutor)               │
-│  ├─> Max 3 workers for parallel file processing           │
-│  ├─> Each worker: Download → Extract → Summarize         │
-│  └─> Aggregate results into single CSV                    │
+│  Concurrent Processing (ThreadPoolExecutor)                │
+│  ├─> Max 3 workers for parallel file processing            │
+│  ├─> Each worker: Download → Extract → Summarize           │
+│  └─> Aggregate results into single CSV                     │
 └────────────────────────────────────────────────────────────┘
                           ▲
                           │
 ┌────────────────────────────────────────────────────────────┐
 │              CORE APPLICATION SERVICES                     │
 │                                                            │
-│  ┌──────────────────────────────────────────────┐         │
-│  │          Summarizer Service                  │         │
-│  │   • Calls Google Gemini API                  │         │
-│  │   • Generates AI summaries                   │         │
-│  │   • Handles errors gracefully                │         │
-│  └──────────────────────────────────────────────┘         │
+│  ┌──────────────────────────────────────────────┐          │
+│  │          Summarizer Service                  │          │
+│  │   • Calls Google Gemini API                  │          │
+│  │   • Generates AI summaries                   │          │
+│  │   • Handles errors gracefully                │          │
+│  └──────────────────────────────────────────────┘          │
 │                     ▲                                      │
-│  ┌──────────────────┴───────────────────────────┐         │
-│  │                                              │         │
-│  ▼                                              ▼         │
-│ ┌──────────────────┐      ┌──────────────────┐          │
-│ │ Parser Service   │      │ Report Service   │          │
-│ │ • Extract text   │      │ • Generate CSV   │          │
-│ │ • Handle formats │      │ • Format output  │          │
-│ └──────────────────┘      └──────────────────┘          │
-│  ▲                                              ▲         │
-│  └──────────────────┬───────────────────────────┘         │
-│                     │                                     │
-│  ┌──────────────────▼───────────────────────────┐        │
-│  │          Drive Service                       │        │
-│  │   • OAuth2 authentication                    │        │
-│  │   • List files from Drive                    │        │
-│  │   • Download documents                       │        │
-│  │   • Get folder metadata                      │        │
-│  └──────────────────────────────────────────────┘        │
-│                                                          │
-│  ┌──────────────────────────────────────────────┐        │
-│  │          Config Service                      │        │
-│  │   • Load environment variables                │        │
-│  │   • Manage API keys securely                 │        │
-│  └──────────────────────────────────────────────┘        │
+│  ┌──────────────────┴───────────────────────────┐          │
+│  │                                              │          │
+│  ▼                                              ▼          │
+│ ┌──────────────────┐      ┌──────────────────┐             │
+│ │ Parser Service   │      │ Report Service   │             │
+│ │ • Extract text   │      │ • Generate CSV   │             │
+│ │ • Handle formats │      │ • Format output  │             │
+│ └──────────────────┘      └──────────────────┘             │
+│  ▲                                              ▲          │
+│  └──────────────────┬───────────────────────────┘          │
+│                     │                                      │
+│  ┌──────────────────▼───────────────────────────┐          │
+│  │          Drive Service                       │          │
+│  │   • OAuth2 authentication                    │          │
+│  │   • List files from Drive                    │          │
+│  │   • Download documents                       │          │
+│  │   • Get folder metadata                      │          │
+│  └──────────────────────────────────────────────┘          │
+│                                                            │
+│  ┌──────────────────────────────────────────────┐          │
+│  │          Config Service                      │          │
+│  │   • Load environment variables                │         │
+│  │   • Manage API keys securely                 │          │
+│  └──────────────────────────────────────────────┘          │
 └────────────────────────────────────────────────────────────┘
 ```
 

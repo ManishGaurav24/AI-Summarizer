@@ -134,6 +134,10 @@ def summarize_documents(request: Request):
     output_path = os.path.join("output", filename)
     generate_csv(summaries, output_path)
 
+    # Store the filename for download endpoint
+    credentials_store["last_csv_path"] = output_path
+    credentials_store["last_csv_filename"] = filename
+
     return templates.TemplateResponse("index.html", {
         "request": request,
         "files": files,
@@ -146,4 +150,19 @@ def summarize_documents(request: Request):
 # ---------------------------------------
 @app.get("/download")
 def download_csv():
-    return FileResponse("summaries.csv", filename="summaries.csv")
+    csv_path = credentials_store.get("last_csv_path")
+    csv_filename = credentials_store.get("last_csv_filename")
+
+    if not csv_path or not os.path.exists(csv_path):
+        return RedirectResponse("/summarize")
+
+    return FileResponse(csv_path, filename=csv_filename)
+
+
+# ---------------------------------------
+# Favicon (prevents 404 error)
+# ---------------------------------------
+@app.get("/favicon.ico")
+def favicon():
+    # Returns a blank response to prevent 404 errors
+    return {"message": "No favicon"}
