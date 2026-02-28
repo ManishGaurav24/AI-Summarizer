@@ -1,0 +1,23 @@
+File Name,Summary
+consolidated_output.txt,"• The policy number NPP1640390 is issued by United States Liability Insurance Company.
+• Heartland Reformed Church in Pella, IA, is insured as a non-profit place of worship.
+• Coverage is effective from December 31, 2024, to December 31, 2025.
+• This policy provides Commercial General Liability coverage for the insured church.
+• The total premium for the policy period is $504.00.
+• Key coverage limits include $1,000,000 per occurrence and a $2,000,000 general aggregate.
+• Specific coverage is provided for Abuse and Molestation Liability and Pastoral Professional Liability.
+• The policy has a $0 liability deductible."
+Auto_Insurance.docx,"• Auto insurance provides financial protection against vehicle damage, theft, and accident-related losses.
+• Essential coverages include liability, collision, comprehensive, medical, and uninsured motorist protection.
+• Premiums are based on factors like age, driving record, location, vehicle type, and mileage.
+• Customers can access discounts for safe driving, multi-policy bundles, good student status, and more.
+• Key policy documents include the ID card, declarations page, and endorsements detailing coverages.
+• After an accident, ensure safety, collect information, and report the claim promptly for processing."
+Semantic Kernel Components - Summary_f.pdf,"• Semantic Kernel orchestrates LLMs, memory, plugins, and prompts to build agentic applications.
+• AI Service Connectors abstract various LLM services through a common interface.
+• Vector Store Connectors manage external vector databases for memory and retrieval.
+• Plugins are named containers for functions, including native code, OpenAPI, and prompt templates.
+• Prompt Templates combine context, instructions, and input, enabling multi-step chat flows.
+• Filters provide hooks for logging, telemetry, and context modification before and after events.
+• The Kernel orchestrates the interaction between user input, AI models, and plugin execution.
+• Vector stores are explicitly used via retrieval plugins, not automatically searched by the Kernel."

@@ -1,0 +1,24 @@
+File Name,Summary
+consolidated_output.txt,"- Heartland Reformed Church holds a Commercial Liability policy.
+- The policy is effective from December 31, 2024, to December 31, 2025.
+- The total premium for this policy period is $504.00.
+- Coverage includes Commercial General Liability and Pastoral Professional Liability.
+- General aggregate limit is $2,000,000; each occurrence limit is $1,000,000.
+- Abuse and Molestation Liability has a $300,000 aggregate limit.
+- The policy contains numerous exclusions, including for PFAS and communicable diseases.
+- Church members and officers are included as additional insureds."
+Semantic Kernel Components - Summary_f.pdf,"- Semantic Kernel orchestrates LLMs, memory, plugins, and prompts for agentic applications.
+- AI Service Connectors abstract large language model providers for unified access.
+- Plugins encapsulate functions from native code, OpenAPI, and prompt templates for model interaction.
+- Prompt templates combine context, input, and function output to create dynamic conversational flows.
+- Filters offer pre- and post-event hooks for custom logic during the chat process.
+- Vector store connectors manage memory for RAG, requiring explicit integration via plugins.
+- Leverage plugins to expose business logic and data sources effectively, enhancing agent capabilities.
+- Semantic Kernel enables use cases like knowledge assistants and multi-step enterprise workflows."
+Auto_Insurance.docx,"- Auto insurance protects policyholders from financial loss caused by accidents, theft, or vehicle damage.
+- Standard policies cover the named insured, spouse, resident relatives, and permitted drivers.
+- Key coverages include Liability, Collision, Comprehensive, Medical, and Uninsured/Underinsured Motorist.
+- Premiums are calculated based on age, driving record, location, vehicle type, mileage, and credit score.
+- Customers can access discounts for safe driving, multi-policy, good student, and low mileage.
+- The claims process involves filing, inspection, liability review, and settlement.
+- CSRs must confirm coverage before advising and avoid promising approvals or repair estimates."
